@@ -38,7 +38,7 @@ object Worker {
     val availableProcessors = Runtime.getRuntime().availableProcessors()
     // val availableProcessors = 1
     val hostname = InetAddress.getLocalHost().getHostName()
-    val numberOfThreads = ParseConfig.server2Threads(hostname).getOrElse(availableProcessors * 2)
+    val numberOfThreads = ParseConfig.server2Threads(hostname).getOrElse(availableProcessors)
     val masterServerAddress = ParseConfig.masterServerAddress
 
     val system = ActorSystem("Worker", ConfigFactory.load(workerAkkaConfig))
