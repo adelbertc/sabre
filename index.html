@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Sabre by adelbertc</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1 class="header">Sabre</h1>
+        <p class="header">In-memory distributed graph processing of trivially parallelizable graph algorithms.</p>
+
+        <ul>
+          <li class="download"><a class="buttons" href="https://github.com/adelbertc/sabre/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/adelbertc/sabre/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/adelbertc/sabre">View On GitHub</a></li>
+        </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/adelbertc">adelbertc</a></p>
+
+
+      </header>
+      <section>
+        <h3>Abstract</h3>
+
+<p>Sabre is an in-memory distributed graph processing system designed for graphs which are big enough to warrant distributed computation but small enough to fit into memory (on the lowest memory machine).</p>
+
+<h3>Disclaimer</h3>
+
+<p>Sabre is currently in an "alpha"/"beta" phase.</p>
+
+<h3>Introduction</h3>
+
+<p>Sabre is an in-memory distributed graph processing system for trivially parallelizable algorithms. Take for example all pairs shortest path (APSP) in an undirected, unweighted graph. A simple algorithm that comes to mind is conducting an exhaustive breadth-first search on every node of the graph. Multithreading this code is fairly straightforward - you can have each thread process one node at a time (each thread gets a node and conducts a full BFS from that node) and display the results as it finishes. However, distributing this code across several machines is a bit more complicated. Ideally, we'd like the programmer to just focus on the algorithm at hand in a local context (see bullet point below) and have the system handle the distribution. Once the algorithm is written, the programmer specifies which machines to distribute over, and the system takes care of the rest. The goal of Sabre is to make this become a reality.</p>
+
+<p>Most distributed graph processing systems are designed to handle complex algorithms and make no assumptions of whether or not the graph fits into memory or not. Therefore, such systems trade simplicity for extensibility. However, sometimes we want to just run a simple algorithm on a graph that is large enough to warrant distributed computing, but small enough to fit into memory (this of course varies as a function of the graph size and the memory of the machine(s) in question). Sabre fills this niche.</p>
+
+<p>Sabre is written in Scala 2.10.0-RC2 and Akka 2.1.0-RC2 and is designed to follow the philosophies shared by both - clean implementation with scalability in mind.</p>
+
+<ul>
+<li>For the APSP problem, the algorithm in a local context would be a function that takes as input a graph G = (V, E) and a node u in V and returns a mapping for all nodes v in V - {u} to the shortest path between u and v.</li>
+</ul><h3>Assumptions Made</h3>
+
+<ul>
+<li>Algorithms can be broken down into several sub-tasks that are independent of one another</li>
+<li>The graph interface provided assumes undirected and unweighted graphs.</li>
+</ul><h3>Functional Requirements</h3>
+
+<ul>
+<li>Easy to deploy - can be deployed on any set of machines that are able to communicate with each other (no firewall)</li>
+<li>Tolerate computers with a let it crash mentality (no attempt will be made to revive the Worker, instead the work will be given to others)</li>
+<li>Basic load balancing (first to request work will be given the work)</li>
+<li>Control maximum number of threads to be used</li>
+</ul><h3>Architecture</h3>
+
+<ul>
+<li>Master-Worker (client-server) - Master contains a queue of work, workers take work from master in a first-ask-first-receive basis</li>
+<li>Master is deployed implicitly by client (client need only call Sabre.execute() to start up the system)</li>
+<li>Workers register with Master and immediately start working</li>
+</ul><h3>Experiments</h3>
+
+<p>All algorithms should only need be expressed in a local context. How the algorithm breaks down and how fine of a granularity work is broken down is up to the user. For example to simply print out the list of degrees in a graph, we can define the algorithm to take in a single node ID and return a single integer value representing the degree. However, we can just as easily define an algorithm to take a collection of nodes and return a <code>Map[Int, Int]</code> mapping the ID of the node to the degree of that node.</p>
+
+<p>Example algorithms include:</p>
+
+<ul>
+<li>List of degrees of graph</li>
+<li>All pairs shortest paths in unweighted, undirected graph using exhaustive BFS</li>
+</ul><h4>Parallel Efficiency</h4>
+
+<p>Some basic parallel efficiency tests will be done for measurement purposes. However, we can expect that the cheaper the cost of the "local algorithm", the lower the parallel efficiency will be since the cost will be more comparable to IO. Similarly, the more expensive the algorithm, the higher it will be as the cost of executing the algorithm will in essence "hide" any time taken for IO.</p>
+
+<h3>Possible Features</h3>
+
+<ul>
+<li>Arbitrary graph structures (directed, weighted, etc.)</li>
+<li>Ability to introduce a "reduce" phase to the results (e.g. for average degree, follow the "list of degrees" example stated above, then take the average and display that instead)</li>
+</ul>
+      </section>
+      <footer>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		
+  </body>
+</html>
