@@ -36,7 +36,6 @@ object Worker {
 
   def main(args: Array[String]) {
     val availableProcessors = Runtime.getRuntime().availableProcessors()
-    // val availableProcessors = 1
     val hostname = InetAddress.getLocalHost().getHostName()
     val numberOfThreads = ParseConfig.server2Threads(hostname).getOrElse(availableProcessors)
     val masterServerAddress = ParseConfig.masterServerAddress
@@ -63,31 +62,18 @@ class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef) extends Actor with A
   case object WorkComplete
 
   def doWork(resultHandler: ActorRef, work: Any) {
-    Future {
+    future {
       val result = algorithm.get.execute(graph, work)
       result match {
-        case None => log.error("Algorithm computation received invalid input.")
+        case None => log.error("Algorithm received bad input.")
         case Some(res) => resultHandler ! HandleResult(res)
       }
       self.tell(WorkComplete, self)
     }
-    /*
-    future {
-      algorithm.get.execute(graph, work)
-    } onSuccess {
-      case None => 
-        log.error("Algorithm computation received invalid input.")
-        self.tell(WorkComplete, self)
-      case Some(result) =>
-        resultHandler ! HandleResult(result)
-        self.tell(WorkComplete, self)
-    }
-    */
   }
 
   override def preStart() = master ! WorkerCreated(self)
 
-  // def working(work: Any): Receive = {
   def working: Receive = {
     case WorkIsReady =>
     case NoWorkToBeDone =>

@@ -25,11 +25,11 @@ object Sabre {
       }
     }
     """)
-  def execute(algorithm: AbstractAlgorithm, work: Iterator[Any], outputFilename: String = "SabreResult.txt") =
+  def execute(algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: String = "SabreResult.txt") =
     new Sabre(algorithm, work, outputFilename)
 }
 
-class Sabre(algorithm: AbstractAlgorithm, work: Iterator[Any], outputFilename: String = "SabreResult.txt") {
+class Sabre(algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: String = "SabreResult.txt") {
   import Sabre.sabreAkkaConfig
   val system = ActorSystem("Sabre", ConfigFactory.load(sabreAkkaConfig))
 

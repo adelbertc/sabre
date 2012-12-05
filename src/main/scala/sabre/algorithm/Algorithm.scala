@@ -4,16 +4,6 @@ import scala.language.existentials
 import scalax.collection.Graph
 import scalax.collection.GraphEdge._
 
-trait AbstractInput extends Serializable
-
-case class SingleNodeInput(u: Int) extends AbstractInput {
-  override def toString = u.toString
-}
-
-case class NodePairInput(u: Int, v: Int) extends AbstractInput {
-  override def toString = u.toString + " " + v.toString
-}
-
 trait AbstractResult extends Serializable {
   override def toString = "You forgot to override the toString method for AbstractResult!"
 }
