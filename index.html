@@ -77,13 +77,28 @@
 <li>All pairs shortest paths in unweighted, undirected graph using exhaustive BFS</li>
 </ul><h4>Parallel Efficiency</h4>
 
-<p>Some basic parallel efficiency tests will be done for measurement purposes. However, we can expect that the cheaper the cost of the "local algorithm", the lower the parallel efficiency will be since the cost will be more comparable to IO. Similarly, the more expensive the algorithm, the higher it will be as the cost of executing the algorithm will in essence "hide" any time taken for IO.</p>
+<p>Below are plots describing the scalability of the system in terms of parallel efficiency. Tests were done in a cluster environment with NFS. Machines use Quad Core Xeon processors clocked @ 2.4 GHz with 24 GB RAM. We take a look at the parallel efficiency ratio, defined as (time taken for 1 worker) / (time taken for all workers * # of workers).</p>
+
+<p>First we show the parallel efficiency (both local and remote) of an exhaustive BFS on a complete graph with 200 nodes.</p>
+
+<p><img src="http://cs.ucsb.edu/%7Eadelbert_chang/290/localbfs.png" alt="Local BFS Efficiency"><img src="http://cs.ucsb.edu/%7Eadelbert_chang/290/remotebfs.png" alt="Remote BFS Efficiency"></p>
+
+<p>Notice that the trend is consistent between local and remote - this is due to the fact that conducting an exhaustive BFS is significantly more complex than serialization. As such, the impact of serialization is minimized.</p>
+
+<p>You can also see that it scales to multiple cores fairly well - with one Worker, it takes roughly 17 seconds to finish the work. With four workers, it takes about 4 seconds. That's a parallel efficiency ratio of almost 1!</p>
+
+<p>We now look at the parallel efficiency of simply retrieving the degree of all nodes in the graph. Note that this is a very trivial operation, and the time taken to perform this operation is much smaller than an exhaustive BFS, and is much more comparable to the time taken for serialization. The graph used is a graph modeled after the structure of online social network, consisting of about 6000 nodes.</p>
+
+<p><img src="http://cs.ucsb.edu/%7Eadelbert_chang/290/localdeg.png" alt="Local Degree Efficiency"><img src="http://cs.ucsb.edu/%7Eadelbert_chang/290/remotedeg.png" alt="Remote Degree Efficiency"></p>
+
+<p>Because serialization is now a bigger factor in the computation, the scalability becomes much more limited. Where before it took 18 seconds to finish work with one Worker, it still takes about 9 seconds to finish with four workers. That's a parallel efficiency ratio of 0.5.</p>
 
 <h3>Possible Features</h3>
 
 <ul>
 <li>Arbitrary graph structures (directed, weighted, etc.)</li>
 <li>Ability to introduce a "reduce" phase to the results (e.g. for average degree, follow the "list of degrees" example stated above, then take the average and display that instead)</li>
+<li>Display task metadata (e.g. computation time) at the end of the computation</li>
 </ul>
       </section>
       <footer>
