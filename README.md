@@ -23,6 +23,28 @@ sabre/
     sabre.cfg
 ```
 
+Spin up an example app by doing:
+
+```
+$ java -cp sabre-assembly-1.0.0.jar sabre.app.ShortestPathApp
+```
+
+or
+
+```
+$ java -cp sabre.assembly-1.0.0.jar sabre.app.DegreeApp
+```
+
+Alternatively, run the appropriate `java` command to load your own app. Then on
+each machine you want to distribute over, do:
+
+```
+$ java -cp sabre.assembly-1.0.0.jar sabre.system.Worker
+```
+
+If you are distributing over several machines, the use of a script may be
+useful.
+
 ### Edgelists
 Edgelists are formatted as two columns. Each column corresponds to an endpoint
 of an edge in the graph. Note that since Sabre assumes an undirected graph,
