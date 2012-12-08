@@ -34,10 +34,6 @@
 
 <p>Sabre is an in-memory distributed graph processing system designed for graphs which are big enough to warrant distributed computation but small enough to fit into memory (on the lowest memory machine).</p>
 
-<h3>Disclaimer</h3>
-
-<p>Sabre is currently in an "alpha"/"beta" phase.</p>
-
 <h3>Introduction</h3>
 
 <p>Sabre is an in-memory distributed graph processing system for trivially parallelizable algorithms. Take for example all pairs shortest path (APSP) in an undirected, unweighted graph. A simple algorithm that comes to mind is conducting an exhaustive breadth-first search on every node of the graph. Multithreading this code is fairly straightforward - you can have each thread process one node at a time (each thread gets a node and conducts a full BFS from that node) and display the results as it finishes. However, distributing this code across several machines is a bit more complicated. Ideally, we'd like the programmer to just focus on the algorithm at hand in a local context (see bullet point below) and have the system handle the distribution. Once the algorithm is written, the programmer specifies which machines to distribute over, and the system takes care of the rest. The goal of Sabre is to make this become a reality.</p>
@@ -99,7 +95,9 @@
 <li>Arbitrary graph structures (directed, weighted, etc.)</li>
 <li>Ability to introduce a "reduce" phase to the results (e.g. for average degree, follow the "list of degrees" example stated above, then take the average and display that instead)</li>
 <li>Display task metadata (e.g. computation time) at the end of the computation</li>
-</ul>
+</ul><h3>Slides</h3>
+
+<p><a href="http://cs.ucsb.edu/%7Eadelbert_chang/290/Sabre290Slides.pdf">link</a></p>
       </section>
       <footer>
         <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
