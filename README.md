@@ -1,4 +1,4 @@
-#Sabre (WIP)
+#Sabre
 Sabre is a distributed (in-memory) graph processing framework
 designed to make distribution of "trivially parallelizable"
 graph computations across a compute grid nice and easy.
