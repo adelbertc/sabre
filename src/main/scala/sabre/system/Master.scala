@@ -2,12 +2,22 @@ package sabre.system
 
 import akka.actor.{ Actor, ActorLogging, ActorRef, Terminated }
 import sabre.algorithm._
-import sabre.system.SabreMasterProtocol._
-import sabre.system.MasterWorkerProtocol._
-import sabre.system.MasterResultHandlerProtocol._
+import sabre.system.ResultHandler._
+import sabre.system.Worker._
 import scala.collection.mutable
 
+object Master {
+  case class DistributeWork(work: Any)
+  case object AllWorkSent
+
+  case class WorkerCreated(worker: ActorRef)
+  case class WorkerRequestsWork(worker: ActorRef)
+  case class WorkIsDone(worker: ActorRef)
+}
+
 class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Actor with ActorLogging {
+  import Master._
+
   val workers = mutable.Map.empty[ActorRef, Option[Any]]
   val workQ = mutable.Queue.empty[Any]
 
@@ -27,7 +37,7 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
     }
   }
 
-  def receive = {
+  override def receive = {
     case WorkerCreated(worker) =>
       log.info("Worker created: {}", worker)
       context.watch(worker)

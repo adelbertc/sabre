@@ -4,7 +4,7 @@ import akka.actor.{ ActorSystem, Props }
 import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
 import sabre.algorithm._
-import sabre.system.SabreMasterProtocol._
+import sabre.system.Master._
 import scala.Console.err
 
 object Sabre {

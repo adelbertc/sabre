@@ -4,9 +4,9 @@ designed to make distribution of "trivially parallelizable"
 graph computations across a compute grid nice and easy.
 
 Sabre is written with 
-[Scala](http://www.scala-lang.org/) 2.10.0-RC3,
-[Akka](http://akka.io/) 2.1.0-RC3,
-and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.5.2.
+[Scala](http://www.scala-lang.org/) 2.10.0,
+[Akka](http://akka.io/) 2.1.0,
+and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.5.2 (to be replaced with 1.6).
 
 # Instructions
 Sabre is written with the [Simple Build Tool](http://www.scala-sbt.org/).

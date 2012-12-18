@@ -2,13 +2,19 @@ package sabre.system
 
 import akka.actor.{ Actor, ActorLogging }
 import java.io.PrintWriter
-import sabre.system.MasterResultHandlerProtocol._
-import sabre.system.WorkerResultHandlerProtocol._
+import sabre.algorithm.AbstractResult
+
+object ResultHandler {
+  case class HandleResult(result: AbstractResult)
+  case object AllResultsSent
+}
 
 class ResultHandler(outputFilename: String) extends Actor with ActorLogging {
+  import ResultHandler._
+
   val outfile = new PrintWriter(outputFilename)
 
-  def receive = {
+  override def receive = {
     case HandleResult(result) =>
       // log.info("Received result.")
       outfile.println(result)
