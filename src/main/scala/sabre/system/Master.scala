@@ -1,6 +1,7 @@
 package sabre.system
 
-import akka.actor.{ Actor, ActorLogging, ActorRef, Terminated }
+import akka.actor.{ Actor, ActorLogging, ActorRef, Address, Terminated }
+import akka.remote.RemoteClientShutdown
 import sabre.algorithm._
 import sabre.system.ResultHandler._
 import sabre.system.Worker._
@@ -23,12 +24,26 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
 
   var allWorkSent = false
 
-  def checkIfAllWorkIsFinished(): Unit = {
+  def checkIfAllWorkIsFinished() {
     val noneWorking = workers.foldLeft(true)((b, p) => b && (p._2 == None))
     if (allWorkSent && noneWorking && workQ.isEmpty) resultHandler ! AllResultsSent
   }
 
-  def notifyWorkers(): Unit = {
+  def killAllWorkersAtAddress(addr: Address) {
+    def hasAddress(worker: ActorRef): Boolean = worker.path.address == addr
+
+    workers.filter(p => hasAddress(p._1)).foreach { workerWorkPair =>
+      val worker = workerWorkPair._1
+      if (workers.contains(worker) && workers(worker) != None) {
+        log.error("Worker {} died while processing {}.", worker, workers(worker))
+        val work = workers(worker).get
+        self.tell(DistributeWork(work), self)
+      }
+      workers -= worker
+    }
+  }
+
+  def notifyWorkers() {
     if (!workQ.isEmpty) {
       workers.foreach {
         case (worker, m) if (m.isEmpty) => worker ! WorkIsReady
@@ -71,9 +86,10 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
         log.error("Worker {} died while processing {}.", worker, workers(worker))
         val work = workers(worker).get
         self.tell(DistributeWork(work), self)
-        self.tell(work, self)
       }
       workers -= worker
+
+    case RemoteClientShutdown(_, addr) => killAllWorkersAtAddress(addr)
 
     case DistributeWork(work) =>
       // log.info("Queueing {}", work)

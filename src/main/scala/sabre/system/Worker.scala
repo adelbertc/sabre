@@ -1,8 +1,7 @@
 package sabre.system
 
 import akka.actor.{ Actor, ActorLogging, ActorPath, ActorRef, ActorSystem, Props }
-import akka.pattern.ask
-import akka.util.Timeout
+import akka.pattern.pipe
 import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
 import sabre.algorithm._
@@ -11,8 +10,6 @@ import sabre.system.ResultHandler._
 import sabre.system.Watcher._
 import sabre.util.ParseConfig
 import scala.Console.err
-import scala.concurrent.Await
-import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.future
 import scalax.collection.Graph
@@ -46,8 +43,11 @@ object Worker {
   def main(args: Array[String]) {
     val availableProcessors = Runtime.getRuntime().availableProcessors()
     val hostname = InetAddress.getLocalHost().getHostName()
-    val numberOfThreads = ParseConfig.server2Threads(hostname).getOrElse(availableProcessors)
     val masterServerAddress = ParseConfig.masterServerAddress
+    val numberOfThreads = ParseConfig.server2Threads(hostname).getOrElse {
+      if (hostname == masterServerAddress) availableProcessors - 2
+      else availableProcessors
+    }
 
     val system = ActorSystem("Worker", ConfigFactory.load(workerAkkaConfig))
     val graph = ParseConfig.readUndirectedGraph()
@@ -80,8 +80,8 @@ class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef, watcher: ActorRef) e
         case None => log.error("Algorithm received bad input.")
         case Some(res) => resultHandler ! HandleResult(res)
       }
-      self.tell(WorkComplete, self)
-    }
+      WorkComplete
+    } pipeTo self
   }
 
   override def preStart() = {
@@ -110,25 +110,12 @@ class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef, watcher: ActorRef) e
         case None =>
           log.error("Got work {} without algorithm!", work)
         case Some(alg) =>
-          doWork(sender, work)
+          val resultHandler = sender
+          doWork(resultHandler, work)
           context.become(working)
       }
     case NoWorkToBeDone => context.stop(self)
   }
 
   override def receive = idle
-  /*
-  override def receive = {
-    case DoAlgorithm(alg) => algorithm = Some(alg)
-    case WorkIsReady =>
-      master ! WorkerRequestsWork(self)
-    case WorkToBeDone(work) =>
-      doWork(sender, work)
-      context.become(working)
-    case WorkComplete =>
-      master ! WorkIsDone
-      master ! WorkerRequestsWork(self)
-    case NoWorkToBeDone => context.stop(self)
-  }
-  */
 }

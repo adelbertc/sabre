@@ -1,6 +1,7 @@
 package sabre.system
 
 import akka.actor.{ ActorSystem, Props }
+import akka.remote.RemoteClientLifeCycleEvent
 import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
 import sabre.algorithm._
@@ -35,6 +36,8 @@ class Sabre(algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: S
 
   val resultHandler = system.actorOf(Props(new ResultHandler(outputFilename)), "resultHandler")
   val master = system.actorOf(Props(new Master(algorithm, resultHandler)), "master")
+
+  system.eventStream.subscribe(master, classOf[RemoteClientLifeCycleEvent])
 
   err.println("Master deployed on " + InetAddress.getLocalHost().getHostName + " as " + master)
 

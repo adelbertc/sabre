@@ -45,6 +45,18 @@ $ java -cp sabre.assembly-1.0.0.jar sabre.system.Worker
 If you are distributing over several machines, the use of a script may be
 useful.
 
+### Fault Tolerance
+Each individual `Worker` is watched by the `Master` - on worker failure
+the master will simply queue up the corresponding work to be done by
+other workers.
+
+If a worker machine JVM crashes, all workers are considered dead and all
+work that was being done on that machine is queued up again.
+
+Because of this fault tolerance mechanism, Sabre is elastic - worker
+machines are free to join (if they are specified in `sabre.cfg`) and leave
+as they please.
+
 ### Edgelists
 Edgelists are formatted as two columns. Each column corresponds to an endpoint
 of an edge in the graph. Note that since Sabre assumes an undirected graph,
@@ -55,7 +67,7 @@ The configuration file follows a very simple format that looks like this:
 
 ```
 Edgelist filename (stored in `edgelists/`)
-client machines address (optional: # of workers)
+master machines address (optional: # of workers)
 worker 1 machine address (optional: # of workers)
 worker 2 machine address (optional: # of workers)
 .
@@ -68,13 +80,16 @@ Note that because workers can also be spawned on the client machine, there
 is the option of listing the # of workers to spawn on that line.
 
 If the # of workers is not specified, the number of workers spawned will
-be the value returned by `Runtime.getRuntime().availableProcessors()`.
+be the value returned by `Runtime.getRuntime().availableProcessors()`. This
+value is subtracted by two on the master machine address so as to not
+interfere with the `Master` and `ResultHandler` - if you really want to
+do that, override it in the config!
 
 An example configuration file may look like this:
 
 ```
 SomeGraph.edgelist
-client.machine.address 2
+master.machine.address 2
 worker.one.address
 worker.two.address 3
 ```
