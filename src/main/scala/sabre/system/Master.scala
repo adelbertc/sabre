@@ -1,7 +1,7 @@
 package sabre.system
 
 import akka.actor.{ Actor, ActorLogging, ActorRef, Address, Terminated }
-import akka.remote.RemoteClientShutdown
+import akka.remote.{ RemoteClientLifeCycleEvent, RemoteClientShutdown }
 import sabre.algorithm._
 import sabre.system.ResultHandler._
 import sabre.system.Worker._
@@ -30,12 +30,14 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
   }
 
   def killAllWorkersAtAddress(addr: Address) {
+    log.error("Worker(s) at {} has (have) died.", addr)
+
     def hasAddress(worker: ActorRef): Boolean = worker.path.address == addr
 
     workers.filter(p => hasAddress(p._1)).foreach { workerWorkPair =>
       val worker = workerWorkPair._1
       if (workers.contains(worker) && workers(worker) != None) {
-        log.error("Worker {} died while processing {}.", worker, workers(worker))
+        // log.error("Worker {} died while processing {}.", worker, workers(worker))
         val work = workers(worker).get
         self.tell(DistributeWork(work), self)
       }
@@ -61,7 +63,7 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
       notifyWorkers()
 
     case WorkerRequestsWork(worker) =>
-      log.info("Worker requests work: {}", worker)
+      // log.info("Worker requests work: {}", worker)
       if (workers.contains(worker)) {
         if (workQ.isEmpty)
           worker ! NoWorkToBeDone
@@ -98,6 +100,8 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
 
     case AllWorkSent => allWorkSent = true
 
-    case badMessage => log.error("Bad message received: {}", badMessage)
+    case badMessage =>
+      if (!badMessage.isInstanceOf[RemoteClientLifeCycleEvent])
+        log.error("Bad message received: {}", badMessage)
   }
 }

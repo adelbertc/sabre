@@ -6,7 +6,7 @@ version := "1.0.0-RC3"
 
 organization := "adelbertc"
 
-scalaVersion := "2.10.0-RC5"
+scalaVersion := "2.10.0"
 
 resolvers += "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
 

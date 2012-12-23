@@ -30,7 +30,7 @@ object Sabre {
     new Sabre(algorithm, work, outputFilename)
 }
 
-class Sabre(algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: String = "SabreResult.txt") {
+class Sabre private (algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: String = "SabreResult.txt") {
   import Sabre.sabreAkkaConfig
   val system = ActorSystem("Sabre", ConfigFactory.load(sabreAkkaConfig))
 
