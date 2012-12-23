@@ -11,3 +11,18 @@ project/plugins/project/
 
 # Scala-IDE specific
 .scala_dependencies
+
+# Mac OS specific
+.DS_Store
+.DS_Store?
+.AppleDouble
+.LSOverride
+Icon
+Icon?
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
