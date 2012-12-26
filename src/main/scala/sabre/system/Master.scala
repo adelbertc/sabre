@@ -37,7 +37,6 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
     workers.filter(p => hasAddress(p._1)).foreach { workerWorkPair =>
       val worker = workerWorkPair._1
       if (workers.contains(worker) && workers(worker) != None) {
-        // log.error("Worker {} died while processing {}.", worker, workers(worker))
         val work = workers(worker).get
         self.tell(DistributeWork(work), self)
       }
@@ -63,7 +62,6 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
       notifyWorkers()
 
     case WorkerRequestsWork(worker) =>
-      // log.info("Worker requests work: {}", worker)
       if (workers.contains(worker)) {
         if (workQ.isEmpty)
           worker ! NoWorkToBeDone
@@ -78,7 +76,6 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
       if (!workers.contains(worker)) {
         log.error("Unregistered worker {} tried to return finished work!", worker)
       } else {
-        // log.info("Worker {} finished work.", worker)
         workers += (worker -> None)
         checkIfAllWorkIsFinished()
       }
@@ -94,14 +91,13 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
     case RemoteClientShutdown(_, addr) => killAllWorkersAtAddress(addr)
 
     case DistributeWork(work) =>
-      // log.info("Queueing {}", work)
       workQ.enqueue(work)
       notifyWorkers()
 
     case AllWorkSent => allWorkSent = true
 
-    case badMessage =>
-      if (!badMessage.isInstanceOf[RemoteClientLifeCycleEvent])
-        log.error("Bad message received: {}", badMessage)
+    case _: RemoteClientLifeCycleEvent =>
+
+    case badMessage => log.error("Bad message received: {}", badMessage)
   }
 }
