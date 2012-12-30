@@ -2,6 +2,7 @@ package sabre.system
 
 import akka.actor.{ Actor, ActorLogging, ActorPath, ActorRef, ActorSystem, Props }
 import akka.pattern.pipe
+import akka.remote.RemoteClientLifeCycleEvent
 import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
 import sabre.algorithm._
@@ -55,6 +56,7 @@ object Worker {
     val master = system.actorFor(masterLocation)
 
     val watcher = system.actorOf(Props[Watcher])
+    system.eventStream.subscribe(watcher, classOf[RemoteClientLifeCycleEvent])
 
     println("Master location: " + master)
 

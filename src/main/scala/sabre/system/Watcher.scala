@@ -1,6 +1,7 @@
 package sabre.system
 
 import akka.actor.{ Actor, ActorLogging, ActorRef, Terminated }
+import akka.remote.RemoteClientShutdown
 
 object Watcher {
   case class Watch(worker: ActorRef)
@@ -21,5 +22,9 @@ class Watcher extends Actor with ActorLogging {
         log.info("All workers killed, shutting down system.")
         context.system.shutdown()
       }
+    case RemoteClientShutdown(_, _) =>
+      log.error("Master down, shutting down.")
+      context.system.shutdown()
+    case _ =>
   }
 }
