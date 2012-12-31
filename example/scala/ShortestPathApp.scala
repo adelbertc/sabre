@@ -1,5 +1,3 @@
-package sabre.app
-
 import sabre.algorithm._
 import sabre.system.Sabre
 import sabre.util.NodeGetter
