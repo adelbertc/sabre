@@ -81,7 +81,7 @@ class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef, watcher: ActorRef) e
       val result = Try { algorithm.get.execute(graph, work) }
       result match {
         case Success(res) => resultHandler ! HandleResult(res)
-        case Failure(exception) => log.error("Input {} resulted in exception {}.", work, exception)
+        case Failure(exception) => log.error("Input {} resulted in exception {}.", work, exception.getMessage())
       }
 
       WorkComplete
