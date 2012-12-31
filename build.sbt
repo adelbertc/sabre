@@ -2,9 +2,9 @@ import AssemblyKeys._
 
 name := "sabre"
 
-version := "1.0.0-RC3"
+version := "1.0.0-RC4"
 
-organization := "adelbertc"
+organization := "com.adelbertc"
 
 scalaVersion := "2.10.0"
 
