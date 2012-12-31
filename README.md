@@ -1,7 +1,8 @@
 #Sabre
 Sabre is a distributed (in-memory) graph processing framework
 designed to make distribution of "trivially parallelizable"
-graph computations across a compute grid nice and easy.
+graph computations across a compute grid nice and easy. It
+is designed for producing raw results in the form of a text file.
 
 Sabre is written with 
 [Scala](http://www.scala-lang.org/) 2.10.0,
@@ -9,18 +10,18 @@ Sabre is written with
 and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.5.2 (to be replaced with 1.6).
 
 # Usage
-Spin up an example app by doing something like:
+Write your algorithm (see `example/` for guidance), making sure it has a `main`
+method that calls `Sabre.execute()`. Make sure `sabre.cfg` is in order (see below)
+and run your program on the master machine.
 
-```
-$ sbt 'run-main ShortestPathApp'
-```
-
-Alternatively, run the appropriate command to load your own app. Then on
-each machine you want to distribute over, run `sabre.system.Worker`.
-
+Then on each machine you intend to distribute over, run `sabre.system.Worker`.
 
 If you are distributing over several machines, the use of a script may be
 useful.
+
+Make sure when you run both the master and workers that the current working
+directory has the `sabre.cfg` file and a subdirectory `edgelists/` containing
+the graph edgelists.
 
 ### Fault Tolerance
 Each individual `Worker` is watched by the `Master` - on worker failure
