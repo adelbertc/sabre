@@ -13,6 +13,7 @@ import sabre.util.ParseConfig
 import scala.Console.err
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.future
+import scala.util.{ Failure, Success, Try }
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._
@@ -77,11 +78,12 @@ class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef, watcher: ActorRef) e
 
   def doWork(resultHandler: ActorRef, work: Any) {
     future {
-      val result = algorithm.get.execute(graph, work)
+      val result = Try { algorithm.get.execute(graph, work) }
       result match {
-        case None => log.error("Algorithm received bad input.")
-        case Some(res) => resultHandler ! HandleResult(res)
+        case Success(res) => resultHandler ! HandleResult(res)
+        case Failure(exception) => log.error("Input {} resulted in exception {}.", work, exception)
       }
+
       WorkComplete
     } pipeTo self
   }

@@ -25,5 +25,5 @@ case class MapVectorResult(input: Any, output: Map[_ <: Any, Vector[Any]]) exten
 }
 
 trait AbstractAlgorithm extends Serializable {
-  def execute(graph: Graph[Int, UnDiEdge], input: Any): Option[AbstractResult]
+  def execute(graph: Graph[Int, UnDiEdge], input: Any): AbstractResult
 }

@@ -32,18 +32,11 @@ object ShortestPathAlgorithm extends AbstractAlgorithm {
     bfs.toMap
   }
 
-  override def execute(graph: Graph[Int, UnDiEdge], input: Any): Option[AbstractResult] = input match {
-    case u: Int =>
-      val uNode = graph find u
-      uNode match {
-        case None => None
-        case _ => Some(MapResult(input, getFullBfs(graph, u)))
-      }
-    case _ => None
-  }
+  override def execute(graph: Graph[Int, UnDiEdge], input: Any): AbstractResult =
+    MapResult(input, getFullBfs(graph, input.asInstanceOf[Int]))
 }
 
-object ShortestPathApp {
+object ShortestPath {
   def main(args: Array[String]): Unit = {
     if (args.size == 0)
       Sabre.execute(ShortestPathAlgorithm, NodeGetter.getAllNodes())

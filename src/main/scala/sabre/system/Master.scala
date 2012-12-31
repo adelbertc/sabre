@@ -66,6 +66,7 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
         if (workQ.isEmpty)
           worker ! NoWorkToBeDone
         else if (workers(worker) == None) {
+          log.info("Worker {} requests work.", worker)
           val work = workQ.dequeue()
           workers += (worker -> Some(work))
           worker.tell(WorkToBeDone(work), resultHandler)

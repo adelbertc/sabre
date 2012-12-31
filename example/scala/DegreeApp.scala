@@ -8,14 +8,11 @@ import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._
 
 object DegreeAlgorithm extends AbstractAlgorithm {
-  override def execute(graph: Graph[Int, UnDiEdge], input: Any): Option[AbstractResult] = input match {
-    case u: Int => graph.find(u).map(node => Result(input, node.degree))
-
-    case _ => None
-  }
+  override def execute(graph: Graph[Int, UnDiEdge], input: Any): AbstractResult =
+    Result(input, graph.get(input.asInstanceOf[Int]).degree)
 }
 
-object DegreeApp {
+object Degree {
   def main(args: Array[String]): Unit = {
     if (args.size == 0)
       Sabre.execute(DegreeAlgorithm, NodeGetter.getAllNodes())
