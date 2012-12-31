@@ -63,6 +63,12 @@ value is subtracted by two on the master machine address so as to not
 interfere with the `Master` and `ResultHandler` - if you really want to
 do that, override it in the config!
 
+It is up to the programmer to tune the # number of workers to their specific
+algorithm - algorithms whose work finishes very fast and has time dominated
+by waiting for network I/O may want to spawn many more workers than the default.
+Those whose work are CPU intensive may want to simply use the default. A
+more extensive discussion can be found [here](http://stackoverflow.com/questions/10879296/how-to-determine-the-number-of-actors-to-spawn-in-akka).
+
 An example configuration file may look like this:
 
 ```
