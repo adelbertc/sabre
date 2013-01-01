@@ -47,7 +47,7 @@ object Worker {
     val hostname = InetAddress.getLocalHost().getHostName()
     val masterServerAddress = ParseConfig.masterServerAddress
     val numberOfThreads = ParseConfig.server2Threads(hostname).getOrElse {
-      if (hostname == masterServerAddress) availableProcessors - 2
+      if (hostname == masterServerAddress) availableProcessors - 1
       else availableProcessors
     }
 
