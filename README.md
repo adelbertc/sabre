@@ -2,12 +2,12 @@
 Sabre is a distributed (in-memory) graph processing framework
 designed to make distribution of "trivially parallelizable"
 graph computations across a compute grid nice and easy. It
-is designed for producing raw results in the form of a text file.
+is designed for producing raw results in a raw text format.
 
 Sabre is written with 
 [Scala](http://www.scala-lang.org/) 2.10.0,
 [Akka](http://akka.io/) 2.1.0,
-and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.5.2 (to be replaced with 1.6).
+and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.5.2.
 
 # Usage
 Write your algorithm (see `example/` for guidance), making sure it has a `main`
