@@ -1,6 +1,6 @@
 import sabre.algorithm._
 import sabre.system.Sabre
-import sabre.util.NodeGetter
+import sabre.util.FromEdgelist
 import scala.Console.err
 import scala.io.Source
 import scalax.collection.Graph
@@ -14,8 +14,9 @@ object DegreeAlgorithm extends AbstractAlgorithm {
 
 object Degree {
   def main(args: Array[String]): Unit = {
+    val allNodes = FromEdgelist.nodes()
     if (args.size == 0)
-      Sabre.execute(DegreeAlgorithm, NodeGetter.getAllNodes())
-    else Sabre.execute(DegreeAlgorithm, NodeGetter.getAllNodes(), args(0))
+      Sabre.execute(DegreeAlgorithm, allNodes) 
+    else Sabre.execute(DegreeAlgorithm, allNodes, args(0))
   }
 }

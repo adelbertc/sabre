@@ -59,8 +59,6 @@ object Worker {
     val watcher = system.actorOf(Props[Watcher])
     system.eventStream.subscribe(watcher, classOf[RemoteClientLifeCycleEvent])
 
-    println("Master location: " + master)
-
     for (i <- 0 until numberOfThreads) {
       val workerName = "worker" + i
       val workerRef = system.actorOf(Props(new Worker(graph, master, watcher)), workerName)

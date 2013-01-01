@@ -1,6 +1,6 @@
 import sabre.algorithm._
 import sabre.system.Sabre
-import sabre.util.NodeGetter
+import sabre.util.FromEdgelist
 import scala.annotation.switch
 import scala.Console.err
 import scala.collection.mutable
@@ -38,8 +38,9 @@ object ShortestPathAlgorithm extends AbstractAlgorithm {
 
 object ShortestPath {
   def main(args: Array[String]): Unit = {
+    val allNodes = FromEdgelist.nodes()
     if (args.size == 0)
-      Sabre.execute(ShortestPathAlgorithm, NodeGetter.getAllNodes())
-    else Sabre.execute(ShortestPathAlgorithm, NodeGetter.getAllNodes(), args(0))
+      Sabre.execute(ShortestPathAlgorithm, allNodes)
+    else Sabre.execute(ShortestPathAlgorithm, allNodes, args(0))
   }
 }
