@@ -14,7 +14,7 @@ libraryDependencies += "com.typesafe.akka" % "akka-actor_2.10" % "2.1.0"
 
 libraryDependencies += "com.typesafe.akka" % "akka-remote_2.10" % "2.1.0"
 
-libraryDependencies += "com.assembla.scala-incubator" % "graph-core_2.10.0-RC5" % "1.5.2"
+libraryDependencies += "com.assembla.scala-incubator" % "graph-core_2.10" % "1.6.0"
 
 scalariformSettings
 
