@@ -9,7 +9,7 @@ import sabre.algorithm._
 import sabre.system.Master._
 import sabre.system.ResultHandler._
 import sabre.system.Watcher._
-import sabre.util.ParseConfig
+import sabre.util.{ FromEdgelist, ParseConfig }
 import scala.Console.err
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.future
@@ -53,7 +53,7 @@ object Worker {
     }
 
     val system = ActorSystem("Worker", ConfigFactory.load(workerAkkaConfig))
-    val graph = ParseConfig.readUndirectedGraph()
+    val graph = FromEdgelist.undirectedGraph()
     val masterLocation = "akka://Sabre@" + masterServerAddress + ":2554/user/master"
     val master = system.actorFor(masterLocation)
 

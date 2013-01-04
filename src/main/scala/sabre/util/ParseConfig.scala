@@ -19,12 +19,4 @@ object ParseConfig {
     }
     (edgelist, masterServerAddr, s2t)
   }
-
-  def readUndirectedGraph(): Graph[Int, UnDiEdge] = {
-    val edgeSeq = Source.fromFile(edgelistPath).getLines().map { line =>
-      val linesplit = line.split("\\s+")
-      linesplit(0).toInt ~ linesplit(1).toInt
-    }.toSeq
-    Graph(edgeSeq: _*)
-  }
 }
