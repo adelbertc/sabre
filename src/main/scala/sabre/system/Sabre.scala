@@ -1,6 +1,6 @@
 package sabre.system
 
-import akka.actor.{ ActorSystem, Props }
+import akka.actor.{ Actor, ActorRef, ActorSystem, Props }
 import akka.remote.RemoteClientLifeCycleEvent
 import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
@@ -14,6 +14,7 @@ object Sabre {
       actor {
         provider = "akka.remote.RemoteActorRefProvider"
         serialization-bindings {
+          "scala.collection.Map" = java
           "scalax.collection.Graph" = java
         }
       }
@@ -26,15 +27,25 @@ object Sabre {
       }
     }
     """)
-  def execute(algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: String = "SabreResult.txt") =
-    new Sabre(algorithm, work, outputFilename)
+
+  def execute(algorithm: AbstractAlgorithm, work: Iterable[Any]): Sabre =
+    execute(algorithm, work, "SabreResult.txt")
+
+  def execute(algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: String): Sabre =
+    execute(algorithm, work, new PlainTextOutputter(outputFilename))
+
+  def execute(algorithm: AbstractAlgorithm, work: Iterable[Any], resultHandlerCreator: => Actor): Sabre =
+    new Sabre(algorithm, work, resultHandlerCreator)
 }
 
-class Sabre private (algorithm: AbstractAlgorithm, work: Iterable[Any], outputFilename: String = "SabreResult.txt") {
+class Sabre private (
+    algorithm: AbstractAlgorithm,
+    work: Iterable[Any],
+    resultHandlerCreator: => Actor) {
   import Sabre.sabreAkkaConfig
   val system = ActorSystem("Sabre", ConfigFactory.load(sabreAkkaConfig))
 
-  val resultHandler = system.actorOf(Props(new ResultHandler(outputFilename)), "resultHandler")
+  val resultHandler = system.actorOf(Props(resultHandlerCreator), "resultHandler")
   val master = system.actorOf(Props(new Master(algorithm, resultHandler)), "master")
 
   system.eventStream.subscribe(master, classOf[RemoteClientLifeCycleEvent])

@@ -13,7 +13,7 @@ case class MapResult(input: Any, output: Map[_ <: Any, Any]) extends AbstractRes
 }
 
 case class MapVectorResult(input: Any, output: Map[_ <: Any, Vector[Any]]) extends AbstractResult {
-  override def toString = output.map { p: (Any, Vector[Any]) => input + " " + p._2 + " " + p._2.mkString(" ") }.mkString("\n")
+  override def toString = output.map { p: (Any, Vector[Any]) => input + " " + p._1 + " " + p._2.mkString(" ") }.mkString("\n")
 }
 
 case class Result(input: Any, output: Any) extends AbstractResult {

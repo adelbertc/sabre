@@ -29,6 +29,7 @@ object Worker {
       actor {
         provider = "akka.remote.RemoteActorRefProvider"
         serialization-bindings {
+          "scala.collection.Map" = java
           "scalax.collection.Graph" = java
         }
       }
