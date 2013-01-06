@@ -16,6 +16,10 @@ case class MapVectorResult(input: Any, output: Map[_ <: Any, Vector[Any]]) exten
   override def toString = output.map { p: (Any, Vector[Any]) => input + " " + p._1 + " " + p._2.mkString(" ") }.mkString("\n")
 }
 
+case object NullResult extends AbstractResult {
+  override def toString = ""
+}
+
 case class Result(input: Any, output: Any) extends AbstractResult {
   override def toString = input + " " + output
 }

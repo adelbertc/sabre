@@ -1,10 +1,6 @@
 package sabre.util
 
-import scala.collection.immutable.Map
 import scala.io.Source
-import scalax.collection.Graph
-import scalax.collection.GraphPredef._
-import scalax.collection.GraphEdge._
 
 object ParseConfig {
   private val defaultConfig = "sabre.cfg"
