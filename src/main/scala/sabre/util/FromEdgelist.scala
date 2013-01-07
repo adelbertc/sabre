@@ -16,6 +16,7 @@ object FromEdgelist {
       set ++ (line split "\\s+" map (_.toInt))
     }
   }
+
   def undirectedGraph(): Graph[Int, UnDiEdge] = {
     val edgeSeq = Source.fromFile(ParseConfig.edgelistPath).getLines().map { line =>
       val linesplit = line.split("\\s+")
