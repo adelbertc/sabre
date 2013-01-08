@@ -37,7 +37,7 @@ object ShortestPathAlgorithm extends AbstractAlgorithm {
 }
 
 object ShortestPath {
-  def main(args: Array[String]): Unit = {
+  def main(args: Array[String]) {
     val allNodes = FromEdgelist.nodes()
     if (args.size == 0)
       Sabre.execute(ShortestPathAlgorithm, allNodes)
