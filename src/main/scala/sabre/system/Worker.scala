@@ -117,7 +117,7 @@ class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef, watcher: ActorRef) e
           doWork(resultHandler, work)
           context.become(working)
       }
-    case NoWorkToBeDone => context.stop(self)
+    case NoWorkToBeDone =>
   }
 
   override def receive = idle

@@ -13,6 +13,7 @@ class Watcher extends Actor with ActorLogging {
   var numberOfWorkers = 0
 
   override def receive = {
+    /*
     case Watch(worker) =>
       context.watch(worker)
       numberOfWorkers += 1
@@ -22,6 +23,7 @@ class Watcher extends Actor with ActorLogging {
         log.info("All workers killed, shutting down system.")
         context.system.shutdown()
       }
+    */
     case RemoteClientShutdown(_, _) =>
       log.error("Master down, shutting down.")
       context.system.shutdown()
