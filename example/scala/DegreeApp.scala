@@ -2,8 +2,6 @@ import sabre.algorithm._
 import sabre.result.Result
 import sabre.system.Sabre
 import sabre.util.FromEdgelist
-import scala.Console.err
-import scala.io.Source
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._

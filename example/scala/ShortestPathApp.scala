@@ -2,10 +2,7 @@ import sabre.algorithm._
 import sabre.result.MapResult
 import sabre.system.Sabre
 import sabre.util.FromEdgelist
-import scala.annotation.switch
-import scala.Console.err
 import scala.collection.mutable
-import scala.io.Source
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._
