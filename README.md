@@ -59,7 +59,7 @@ is the option of listing the # of workers to spawn on that line.
 
 If the # of workers is not specified, the number of workers spawned will
 be the value returned by `Runtime.getRuntime().availableProcessors()`. This
-value is subtracted by two on the master machine address so as to not
+value is subtracted by one on the master machine address so as to not
 interfere with the `Master` and `ResultHandler` - if you really want to
 do that, override it in the config!
 
