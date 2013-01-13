@@ -1,6 +1,6 @@
 package sabre.system
 
-import sabre.algorithm.AbstractResult
+import sabre.result.AbstractResult
 
 object ResultHandler {
   case class HandleResult(result: AbstractResult)

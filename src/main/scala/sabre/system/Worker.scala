@@ -8,7 +8,6 @@ import java.net.InetAddress
 import sabre.algorithm._
 import sabre.system.Master._
 import sabre.system.ResultHandler._
-import sabre.system.Watcher._
 import sabre.util.{ FromEdgelist, ParseConfig }
 import scala.Console.err
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -89,7 +88,6 @@ class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef, watcher: ActorRef) e
 
   override def preStart() = {
     master ! WorkerCreated(self)
-    watcher ! Watch(self)
   }
 
   def working: Receive = {

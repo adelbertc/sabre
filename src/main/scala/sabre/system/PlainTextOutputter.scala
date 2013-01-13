@@ -2,7 +2,7 @@ package sabre.system
 
 import akka.actor.{ Actor, ActorLogging }
 import java.io.PrintWriter
-import sabre.algorithm.AbstractResult
+import sabre.result.AbstractResult
 
 class PlainTextOutputter(outputFilename: String) extends Actor with ActorLogging {
   import ResultHandler._

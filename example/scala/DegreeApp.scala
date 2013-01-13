@@ -1,4 +1,5 @@
 import sabre.algorithm._
+import sabre.result.Result
 import sabre.system.Sabre
 import sabre.util.FromEdgelist
 import scala.Console.err
