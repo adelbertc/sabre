@@ -23,6 +23,22 @@ package object result {
     override def toString = input + " " + output
   }
 
+  case class SingleResult(output: Any) extends AbstractResult {
+    override def toString = output.toString
+  }
+
+  case class SingleMapResult(output: Map[_ <: Any, Any]) extends AbstractResult {
+    override def toString = output.map { p: (Any, Any) => p._1 + " " + p._2 }.mkString("\n")
+  }
+
+  case class SingleMapVectorResult(output: Map[_ <: Any, Vector[Any]]) extends AbstractResult {
+    override def toString = output.map { p: (Any, Vector[Any]) => p._1 + " " + p._2.mkString("\n") }.mkString("\n")
+  }
+
+  case class SingleVectorResult(output: Vector[Any]) extends AbstractResult {
+    override def toString = output.mkString(" ")
+  }
+
   case class TupleInputResult(input: (Any, Any), output: Any) extends AbstractResult {
     override def toString = input._1 + " " + input._2 + " " + output
   }
