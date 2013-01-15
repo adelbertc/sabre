@@ -20,8 +20,7 @@ If you are distributing over several machines, the use of a script may be
 useful.
 
 Make sure when you run both the master and workers that the current working
-directory has the `sabre.cfg` file and a subdirectory `edgelists/` containing
-the graph edgelists.
+directory has the `sabre.conf` file.
 
 ### Fault Tolerance
 Each individual `Worker` is watched by the `Master` - on worker failure
@@ -40,48 +39,32 @@ Edgelists are formatted as two columns. Each column corresponds to an endpoint
 of an edge in the graph. Note that since Sabre assumes an undirected graph,
 it is sufficient to simply have one "direction" listed in the edgelist.
 
-### sabre.cfg
-The configuration file follows a very simple format that looks like this:
+### sabre.conf
+The configuration file uses the [Typesafe Config](https://github.com/typesafehub/config) and 
+follows a very simple format that looks like this:
 
 ```
-Edgelist filename (stored in `edgelists/`)
-master machines address (optional: # of workers)
-worker 1 machine address (optional: # of workers)
-worker 2 machine address (optional: # of workers)
-.
-.
-.
-worker n machine address (optional: # of workers)
+sabre {
+    graph = "/path/to/graph.edgelist"
+
+    master = "master.address.here"
+
+    deploy {
+        worker1.machine.address.nr-of-workers = 2
+        worker2.machine.address.nr-of-workers = 3
+        worker3.machine.address.nr-of-workers = 1
+    }
+}
 ```
 
-Note that because workers can also be spawned on the client machine, there
-is the option of listing the # of workers to spawn on that line.
-
-If the # of workers is not specified, the number of workers spawned will
-be the value returned by `Runtime.getRuntime().availableProcessors()`. This
-value is subtracted by one on the master machine address so as to not
-interfere with the `Master` and `ResultHandler` - if you really want to
-do that, override it in the config!
+You may opt to declare a "global" variable `nr-of-workers` in the `sabre` scope and set the
+`nr-of-workers` for each machine to be `${sabre.nr-of-workers}`.
 
 It is up to the programmer to tune the # number of workers to their specific
 algorithm - algorithms whose work finishes very fast and has time dominated
 by waiting for network I/O may want to spawn many more workers than the default.
 Those whose work are CPU intensive may want to simply use the default. A
 more extensive discussion can be found [here](http://stackoverflow.com/questions/10879296/how-to-determine-the-number-of-actors-to-spawn-in-akka).
-
-An example configuration file may look like this:
-
-```
-SomeGraph.edgelist
-master.machine.address 2
-worker.one.address
-worker.two.address 3
-```
-
-This would setup the system to load the graph specified by `edgelists/SomeGraph.edgelist`.
-Spinning up `sabre.system.Worker` on the client machine would spawn 2 workers. Likewise,
-spinning it up on `worker.one.address` would spawn a set of workers of size equal to the number
-of available processors, and three for `worker.two.address`.
 
 The # of workers spawned is an upper bound on the number of processors that will be used
 on the system - it does not guarentee that that number of processors will be fully utilized
