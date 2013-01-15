@@ -45,11 +45,9 @@ object Worker {
   def main(args: Array[String]) {
     val availableProcessors = Runtime.getRuntime().availableProcessors()
     val hostname = InetAddress.getLocalHost().getHostName()
-    val masterServerAddress = ParseConfig.masterServerAddress
-    val numberOfThreads = ParseConfig.server2Threads(hostname).getOrElse {
-      if (hostname == masterServerAddress) availableProcessors - 1
-      else availableProcessors
-    }
+    val masterServerAddress = ParseConfig.config.getString("sabre.master")
+
+    val numberOfThreads = ParseConfig.config.getInt("sabre.deploy." + hostname + ".nr-of-workers")
 
     val system = ActorSystem("Worker", ConfigFactory.load(workerAkkaConfig))
     val graph = FromEdgelist.undirectedGraph()
