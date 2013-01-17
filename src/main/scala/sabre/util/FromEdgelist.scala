@@ -10,22 +10,32 @@ import scalax.collection.GraphEdge._
 object FromEdgelist {
   val edgelistPath = ParseConfig.config.getString("sabre.graph")
 
-  def edges(): Set[(Int, Int)] = Source.fromFile(edgelistPath).getLines().map { line =>
-    val linesplit = line.split("\\s+").map(_.toInt)
-    (linesplit(0), linesplit(1))
-  }.toSet
+  def edges(): Set[(Int, Int)] = {
+    val edgelistFile = Source.fromFile(edgelistPath)
+    val allEdges = edgelistFile.getLines().map { line =>
+      val linesplit = line split "\\s+" map (_.toInt)
+      (linesplit(0), linesplit(1))
+    }.toSet
+    edgelistFile.close()
+    allEdges
+  }
 
   def nodes(): Set[Int] = {
-    Source.fromFile(edgelistPath).getLines().foldLeft(Set.empty[Int]) { (set, line) =>
+    val edgelistFile = Source.fromFile(edgelistPath)
+    val allNodes = edgelistFile.getLines().foldLeft(Set.empty[Int]) { (set, line) =>
       set ++ (line split "\\s+" map (_.toInt))
     }
+    edgelistFile.close()
+    allNodes
   }
 
   def undirectedGraph(): Graph[Int, UnDiEdge] = {
-    val edgeSeq = Source.fromFile(edgelistPath).getLines().map { line =>
+    val edgelistFile = Source.fromFile(edgelistPath)
+    val edgeSeq = edgelistFile.getLines().map { line =>
       val linesplit = line.split("\\s+")
       linesplit(0).toInt ~ linesplit(1).toInt
     }.toSeq
+    edgelistFile.close()
     Graph(edgeSeq: _*)
   }
 }
