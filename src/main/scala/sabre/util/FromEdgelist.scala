@@ -16,7 +16,7 @@ object FromEdgelist {
       val linesplit = line split "\\s+" map (_.toInt)
       (linesplit(0), linesplit(1))
     }.toSet
-    edgelistFile.close()
+    // edgelistFile.close()
     allEdges
   }
 
@@ -25,7 +25,7 @@ object FromEdgelist {
     val allNodes = edgelistFile.getLines().foldLeft(Set.empty[Int]) { (set, line) =>
       set ++ (line split "\\s+" map (_.toInt))
     }
-    edgelistFile.close()
+    // edgelistFile.close()
     allNodes
   }
 
@@ -35,7 +35,7 @@ object FromEdgelist {
       val linesplit = line.split("\\s+")
       linesplit(0).toInt ~ linesplit(1).toInt
     }.toSeq
-    edgelistFile.close()
+    // edgelistFile.close()
     Graph(edgeSeq: _*)
   }
 }
