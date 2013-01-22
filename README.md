@@ -4,12 +4,21 @@ designed to make distribution of "trivially parallelizable"
 graph computations across a compute grid nice and easy. It
 is designed for producing raw results in a raw text format.
 
-Sabre is written with 
+Sabre, at the core, is written with 
 [Scala](http://www.scala-lang.org/) 2.10.0,
 [Akka](http://akka.io/) 2.1.0,
 and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.6.0.
+It uses the [Scala IO](http://jesseeichar.github.com/scala-io-doc/index.html)
+in a few places for IO.
+
+Sabre, as it stands, is more or less ready for use. It is worht noting 
+that I am currently working with some others on creating a more generic version
+of Sabre, along with some more graph/network analysis tools for Scala. I will
+post here when the project(s) become more mature.
 
 # Usage
+DISCLAIMER: Sabre assumes undirected, unweighted graphs.
+
 Write your algorithm (see `example/` for guidance), making sure it has a `main`
 method that calls `Sabre.execute()`. Make sure `sabre.cfg` is in order (see below)
 and run your program on the master machine.
