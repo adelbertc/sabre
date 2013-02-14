@@ -2,7 +2,7 @@ import AssemblyKeys._
 
 name := "sabre"
 
-version := "1.0.0-RC6"
+version := "1.0.0"
 
 organization := "com.adelbertc"
 

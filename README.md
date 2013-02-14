@@ -11,10 +11,10 @@ and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.6.0.
 It also uses the [Scala IO](http://jesseeichar.github.com/scala-io-doc/index.html)
 library in a few places for IO.
 
-Sabre, as it stands, is more or less ready for use. It is worht noting 
-that I am currently working with some others on creating a more generic version
+It is worth noting  that I am currently working with some others on creating a more generic version
 of Sabre, along with some more graph/network analysis tools for Scala. I will
-post here when the project(s) become more mature.
+post here when the project(s) become more mature. The more generic version of Sabre
+will be released as Sabre 2.x. Until then, enjoy Sabre 1.x! 
 
 # Usage
 DISCLAIMER: Sabre assumes undirected, unweighted graphs.
