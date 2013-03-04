@@ -54,19 +54,16 @@ object Worker {
     val masterLocation = "akka://Sabre@" + masterServerAddress + ":2554/user/master"
     val master = system.actorFor(masterLocation)
 
-    val watcher = system.actorOf(Props[Watcher])
-    system.eventStream.subscribe(watcher, classOf[RemoteClientLifeCycleEvent])
-
     for (i <- 0 until numberOfThreads) {
       val workerName = "worker" + i
-      val workerRef = system.actorOf(Props(new Worker(graph, master, watcher)), workerName)
+      val workerRef = system.actorOf(Props(new Worker(graph, master)), workerName)
     }
 
     println(numberOfThreads + " worker(s) started on " + hostname)
   }
 }
 
-class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef, watcher: ActorRef) extends Actor with ActorLogging {
+class Worker(graph: Graph[Int, UnDiEdge], master: ActorRef) extends Actor with ActorLogging {
   import Worker._
   case object WorkComplete
 

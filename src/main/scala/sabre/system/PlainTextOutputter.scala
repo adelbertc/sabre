@@ -10,11 +10,7 @@ class PlainTextOutputter(outputFilename: String) extends Actor with ActorLogging
   val outfile = new PrintWriter(outputFilename)
 
   override def receive = {
-    case HandleResult(result) =>
-      outfile.println(result)
-    case AllResultsSent =>
-      log.info("All results received, shutting down.")
-      outfile.close()
-      context.system.shutdown()
+    case HandleResult(result) => outfile.println(result)
+    case AllResultsSent => outfile.close()
   }
 }

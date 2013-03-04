@@ -1,6 +1,6 @@
 package sabre.system
 
-import akka.actor.{ Actor, ActorLogging, ActorRef, Address, Terminated }
+import akka.actor.{ Actor, ActorLogging, ActorRef, Address, PoisonPill, Terminated }
 import akka.remote.{ RemoteClientLifeCycleEvent, RemoteClientShutdown }
 import sabre.algorithm._
 import sabre.system.ResultHandler._
@@ -25,8 +25,13 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
   var allWorkSent = false
 
   def checkIfAllWorkIsFinished() {
-    val noneWorking = workers.foldLeft(true)((b, p) => b && (p._2 == None))
-    if (allWorkSent && noneWorking && workQ.isEmpty) resultHandler ! AllResultsSent
+    val noneWorking = workers.forall(_._2 == None)
+    if (allWorkSent && noneWorking && workQ.isEmpty) {
+      log.info("Computation finished, shutting down gracefully.")
+      resultHandler ! AllResultsSent
+      resultHandler ! PoisonPill
+      workers.foreach(_._1 ! PoisonPill)
+    }
   }
 
   def killAllWorkersAtAddress(addr: Address) {
