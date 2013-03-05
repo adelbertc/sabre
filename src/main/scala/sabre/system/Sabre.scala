@@ -6,6 +6,7 @@ import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
 import sabre.algorithm._
 import sabre.system.Master._
+import sabre.system.Reaper._
 import scala.Console.err
 
 object Sabre {
@@ -47,6 +48,10 @@ class Sabre private (
 
   val resultHandler = system.actorOf(Props(resultHandlerCreator), "resultHandler")
   val master = system.actorOf(Props(new Master(algorithm, resultHandler)), "master")
+  val reaper = system.actorOf(Props[Reaper], "reaper")
+
+  reaper ! WatchMe(resultHandler)
+  reaper ! WatchMe(master)
 
   system.eventStream.subscribe(master, classOf[RemoteClientLifeCycleEvent])
 

@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
 import sabre.algorithm._
 import sabre.system.Master._
+import sabre.system.Reaper._
 import sabre.system.ResultHandler._
 import sabre.util.{ FromEdgelist, ParseConfig }
 import scala.Console.err
@@ -53,10 +54,12 @@ object Worker {
     val graph = FromEdgelist.undirectedGraph()
     val masterLocation = "akka://Sabre@" + masterServerAddress + ":2554/user/master"
     val master = system.actorFor(masterLocation)
+    val reaper = system.actorOf(Props[Reaper], "reaper")
 
     for (i <- 0 until numberOfThreads) {
       val workerName = "worker" + i
       val workerRef = system.actorOf(Props(new Worker(graph, master)), workerName)
+      reaper ! WatchMe(workerRef)
     }
 
     println(numberOfThreads + " worker(s) started on " + hostname)

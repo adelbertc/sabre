@@ -23,14 +23,16 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
   val workQ = mutable.Queue.empty[Any]
 
   var allWorkSent = false
+  var inShutdownSequence = false
 
   def checkIfAllWorkIsFinished() {
     val noneWorking = workers.forall(_._2 == None)
     if (allWorkSent && noneWorking && workQ.isEmpty) {
-      log.info("Computation finished, shutting down gracefully.")
+      inShutdownSequence = true
       resultHandler ! AllResultsSent
       resultHandler ! PoisonPill
       workers.foreach(_._1 ! PoisonPill)
+      self.tell(PoisonPill, self)
     }
   }
 
@@ -86,14 +88,15 @@ class Master(algorithm: AbstractAlgorithm, resultHandler: ActorRef) extends Acto
       }
 
     case Terminated(worker) =>
-      if (workers.contains(worker) && workers(worker) != None) {
+      if (workers.contains(worker) && workers(worker) != None && !inShutdownSequence) {
         log.error("Worker {} died while processing {}.", worker, workers(worker))
         val work = workers(worker).get
         self.tell(DistributeWork(work), self)
       }
       workers -= worker
 
-    case RemoteClientShutdown(_, addr) => killAllWorkersAtAddress(addr)
+    case RemoteClientShutdown(_, addr) =>
+      if (!inShutdownSequence) killAllWorkersAtAddress(addr)
 
     case DistributeWork(work) =>
       workQ.enqueue(work)
