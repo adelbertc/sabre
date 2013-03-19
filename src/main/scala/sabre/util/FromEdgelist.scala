@@ -1,6 +1,5 @@
 package sabre.util
 
-import com.typesafe.config.ConfigFactory
 import scalax.collection.Graph
 import scalax.collection.GraphPredef._
 import scalax.collection.GraphEdge._
