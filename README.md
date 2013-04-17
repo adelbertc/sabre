@@ -82,7 +82,7 @@ number of active processors will diminish.
 ##License
 Please refer to the LICENSE file.
 
-###Author
+##Author
 Adelbert Chang [@adelbertchang](https://twitter.com/adelbertchang)
 
 ##Acknowledgements
