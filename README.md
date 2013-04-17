@@ -11,6 +11,9 @@ and [Graph for Scala](https://www.assembla.com/spaces/scala-graph/wiki) 1.6.1.
 It also uses the [Scala IO](http://jesseeichar.github.com/scala-io-doc/index.html)
 library in a few places for IO.
 
+This project is the manifestation of my Akka Summer of Blog post on distributed graph
+processing, found [here](http://letitcrash.com/post/29044669086/balancing-workload-across-nodes-with-akka-2).
+
 # Usage
 DISCLAIMER: Sabre assumes undirected, unweighted graphs.
 
@@ -75,3 +78,29 @@ on the system - it does not guarentee that that number of processors will be ful
 throughout the whole process. Such an example would be when the number of workers begins to
 be greater than the number of jobs available - workers then start becoming idle and the
 number of active processors will diminish.
+
+###License
+Please refer to the LICENSE file.
+
+###Author
+Adelbert Chang [@adelbertchang](https://twitter.com/adelbertchang)
+
+###Acknowledgements
+A large portion of the architecture of this project is taken from
+[Derek Wyatt](https://twitter.com/derekwyatt)'s Akka Summer of Blog submissions.
+The workload balancing and fault-tolerance mechanisms are taken from
+[this](http://letitcrash.com/post/29044669086/balancing-workload-across-nodes-with-akka-2) post
+and the shutdown mechanism was taken from [this](http://letitcrash.com/post/30165507578/shutdown-patterns-in-akka-2) one.
+
+###Contributing
+I believe in the current implementation, the most glaring need for improvement
+is the lack of typing (types as `Any`), most notably in
+`sabre.result`. As I am a full-time student as well as a research assistant, I do not
+have a lot of time to fix this, but it is something I am looking into (in the back
+of my mind at least). If you would like to undertake the challenge, please submit a
+pull request! (This goes for any other improvements as well)
+
+1. Fork
+2. Create a feature branch
+3. Commit and push your branch to your fork
+4. Submit pull request
