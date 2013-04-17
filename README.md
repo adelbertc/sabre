@@ -79,20 +79,20 @@ throughout the whole process. Such an example would be when the number of worker
 be greater than the number of jobs available - workers then start becoming idle and the
 number of active processors will diminish.
 
-###License
+##License
 Please refer to the LICENSE file.
 
 ###Author
 Adelbert Chang [@adelbertchang](https://twitter.com/adelbertchang)
 
-###Acknowledgements
+##Acknowledgements
 A large portion of the architecture of this project is taken from
 [Derek Wyatt](https://twitter.com/derekwyatt)'s Akka Summer of Blog submissions.
 The workload balancing and fault-tolerance mechanisms are taken from
 [this](http://letitcrash.com/post/29044669086/balancing-workload-across-nodes-with-akka-2) post
 and the shutdown mechanism was taken from [this](http://letitcrash.com/post/30165507578/shutdown-patterns-in-akka-2) one.
 
-###Contributing
+##Contributing
 I believe in the current implementation, the most glaring need for improvement
 is the lack of typing (types as `Any`), most notably in
 `sabre.result`. As I am a full-time student as well as a research assistant, I do not
